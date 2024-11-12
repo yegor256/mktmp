@@ -23,6 +23,7 @@
  */
 package com.yegor256;
 
+import java.io.File;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -42,6 +43,15 @@ final class MktmpResolverTest {
         MatcherAssert.assertThat(
             "the directory is there",
             tmp.toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void worksAlsoWithFile(@Mktmp final File tmp) {
+        MatcherAssert.assertThat(
+            "the directory is there too",
+            tmp.exists(),
             Matchers.is(true)
         );
     }

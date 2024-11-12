@@ -23,6 +23,7 @@
  */
 package com.yegor256;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -42,6 +43,7 @@ public final class MktmpResolver implements ParameterResolver {
     public boolean supportsParameter(final ParameterContext context,
         final ExtensionContext ext) {
         return context.getParameter().getType().equals(Path.class)
+            || context.getParameter().getType().equals(File.class)
             && context.isAnnotated(Mktmp.class);
     }
 
@@ -60,7 +62,13 @@ public final class MktmpResolver implements ParameterResolver {
             }
             ++idx;
         }
-        return path;
+        final Object ret;
+        if (context.getParameter().getType().equals(File.class)) {
+            ret = path.toFile();
+        } else {
+            ret = path;
+        }
+        return ret;
     }
 
 }
