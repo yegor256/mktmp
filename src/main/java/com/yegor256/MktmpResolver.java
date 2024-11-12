@@ -50,9 +50,8 @@ public final class MktmpResolver implements ParameterResolver {
     @Override
     public Object resolveParameter(final ParameterContext context,
         final ExtensionContext ext) {
-        Path path = Paths.get(
-            String.format("target/mktmp/%s", ext.getDisplayName())
-        ).toAbsolutePath();
+        final Path target = Paths.get("target").toAbsolutePath();
+        Path path = target.resolve("mktmp").resolve(ext.getDisplayName());
         int idx = 0;
         while (true) {
             final Path sub = path.resolve(Integer.toString(idx));
