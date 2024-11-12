@@ -16,7 +16,7 @@ Very often, in JUnit5 tests you need a temporary directory,
 which you can check after the tests fail. The standard
 `@Tmpdir` doesn't provide such a possibility, because it
 deletes the directory when Maven build is over. The annotation
-in this packages solves this problem.
+in the packages solves this problem.
 
 First, you add this to your `pom.xml`:
 
@@ -39,8 +39,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(MktmpResolver.class)
 class FooTest {
     @Test
-    void worksFine(@Mktmp Path dir) {
-        // here you can work with the 'dir'
+    void worksFine(@Mktmp Path tmp) {
+        // The "tmp" directory is a subdirectory of
+        // the "target/mktmp/" directory, where all
+        // temporary directories of all tests will
+        // be kept, in order to help you review the
+        // leftovers after failed (or passed) tests.
     }
 }
 ```
