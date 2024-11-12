@@ -52,7 +52,7 @@ public final class MktmpResolver implements ParameterResolver {
         final ExtensionContext ext) {
         Path path = Paths.get(
             String.format("target/mktmp/%s", ext.getDisplayName())
-        );
+        ).toAbsolutePath();
         int idx = 0;
         while (true) {
             final Path sub = path.resolve(Integer.toString(idx));

@@ -28,6 +28,8 @@ import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
@@ -62,6 +64,16 @@ final class MktmpResolverTest {
             "the directory is there",
             first.toString().equals(second.toString()),
             Matchers.is(false)
+        );
+    }
+
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void makesAbsolutePath(@Mktmp final Path tmp) {
+        MatcherAssert.assertThat(
+            "the path is absolute",
+            tmp.toString(),
+            Matchers.startsWith("/")
         );
     }
 }
