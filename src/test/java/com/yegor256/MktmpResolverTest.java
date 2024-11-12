@@ -55,4 +55,13 @@ final class MktmpResolverTest {
             Matchers.is(true)
         );
     }
+
+    @Test
+    void createsTwoDirectories(@Mktmp final Path first, @Mktmp final Path second) {
+        MatcherAssert.assertThat(
+            "the directory is there",
+            first.toString().equals(second.toString()),
+            Matchers.is(false)
+        );
+    }
 }
