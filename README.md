@@ -16,7 +16,9 @@ Very often, in [JUnit5][junit] tests you need a temporary directory,
 which you can check after the tests fail. The standard
 [`@TempDir`][TempDir] doesn't provide such a possibility, because it
 deletes the directory when Maven build is over. The annotation
-in the packages solves this problem.
+in this tiny package solves exactly this problem: it places temporary
+files in the `target/` directory, letting you inspect them after
+the tests finish.
 
 First, you add this to your `pom.xml`:
 
