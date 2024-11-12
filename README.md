@@ -12,9 +12,9 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/mktmp)](https://hitsofcode.com/view/github/yegor256/mktmp)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/mktmp/blob/master/LICENSE.txt)
 
-Very often, in JUnit5 tests you need a temporary directory,
+Very often, in [JUnit5][junit] tests you need a temporary directory,
 which you can check after the tests fail. The standard
-`@Tmpdir` doesn't provide such a possibility, because it
+[`@TempDir`][TempDir] doesn't provide such a possibility, because it
 deletes the directory when Maven build is over. The annotation
 in the packages solves this problem.
 
@@ -62,3 +62,6 @@ mvn clean install -Pqulice
 ```
 
 You will need Maven 3.3+ and Java 11+.
+
+[junit]: https://junit.org/junit5/
+[TempDir]: https://junit.org/junit5/docs/5.4.1/api/org/junit/jupiter/api/io/TempDir.html
