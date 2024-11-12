@@ -37,17 +37,16 @@ import com.yegor256.Mktmp;
 import com.yegor256.MktmpResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 @ExtendWith(MktmpResolver.class)
 class FooTest {
-    @Test
-    void worksFine(@Mktmp Path tmp) {
-        // The "tmp" directory is a subdirectory of
-        // the "target/mktmp/" directory, where all
-        // temporary directories of all tests will
-        // be kept, in order to help you review the
-        // leftovers after failed (or passed) tests.
-    }
+  @Test
+  void worksFine(@Mktmp Path tmp) {
+    // The "tmp" directory is a subdirectory of
+    // the "target/mktmp/" directory, where all
+    // temporary directories of all tests will
+    // be kept, in order to help you review the
+    // leftovers after failed (or passed) tests.
+  }
 }
 ```
 
