@@ -45,6 +45,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 final class MktmpResolverTest {
 
     @BeforeAll
+    @EnabledOnOs({OS.LINUX, OS.MAC})
     static void onceTemp(@Mktmp final Path tmp) {
         MatcherAssert.assertThat(
             "the directory is there, once for all tests",
