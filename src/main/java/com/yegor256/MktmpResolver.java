@@ -24,7 +24,6 @@
 package com.yegor256;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -55,9 +54,18 @@ public final class MktmpResolver implements ParameterResolver {
     public Object resolveParameter(final ParameterContext context,
         final ExtensionContext ext) {
         final Path target = Paths.get("target").toAbsolutePath();
-        Path path = target.resolve("mktmp")
-            .resolve(ext.getTestClass().map(Class::getSimpleName).orElse("none"))
-            .resolve(ext.getTestMethod().map(Method::getName).orElse(ext.getUniqueId()));
+        Path path = target
+            .resolve("mktmp")
+            .resolve(
+                ext.getTestClass()
+                    .map(Class::getSimpleName)
+                    .orElse(ext.getDisplayName())
+            )
+            .resolve(
+                context.getParameter()
+                    .getDeclaringExecutable()
+                    .getName()
+            );
         while (true) {
             final Path sub = path.resolve(
                 String.format(

@@ -51,6 +51,13 @@ final class MktmpResolverTest {
             tmp.toFile().exists(),
             Matchers.is(true)
         );
+        MatcherAssert.assertThat(
+            "the directory name is proper",
+            tmp.toString(),
+            Matchers.containsString(
+                "target/mktmp/MktmpResolverTest/onceTemp/1st-"
+            )
+        );
     }
 
     @Test
