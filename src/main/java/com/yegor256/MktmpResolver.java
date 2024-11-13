@@ -26,6 +26,9 @@ package com.yegor256;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -51,17 +54,21 @@ public final class MktmpResolver implements ParameterResolver {
     public Object resolveParameter(final ParameterContext context,
         final ExtensionContext ext) {
         final Path target = Paths.get("target").toAbsolutePath();
-        Path path = target.resolve("mktmp").resolve(ext.getDisplayName());
-        int idx = 0;
+        Path path = target.resolve("mktmp")
+            .resolve(ext.getTestMethod().get().getDeclaringClass().getSimpleName())
+            .resolve(ext.getTestMethod().get().getName());
         while (true) {
             final Path sub = path.resolve(
-                String.format("%d-%d", context.getIndex(), idx)
+                String.format(
+                    "%s-%s",
+                    MktmpResolver.ordinal(context.getIndex() + 1),
+                    new SimpleDateFormat("mm'm'ss's'SS", Locale.ROOT).format(new Date())
+                )
             );
             if (sub.toFile().mkdirs()) {
                 path = sub;
                 break;
             }
-            ++idx;
         }
         final Object ret;
         if (context.getParameter().getType().equals(File.class)) {
@@ -70,6 +77,25 @@ public final class MktmpResolver implements ParameterResolver {
             ret = path;
         }
         return ret;
+    }
+
+    /**
+     * Turn index into an ordinal number.
+     * @param num The number
+     * @return Ordinal one (1st, 2nd, 3rd, 8th, etc.)
+     */
+    private static String ordinal(final int num) {
+        final String tail;
+        if (num % 10 == 1) {
+            tail = "st";
+        } else if (num % 10 == 2) {
+            tail = "nd";
+        } else if (num % 10 == 3) {
+            tail = "rd";
+        } else {
+            tail = "th";
+        }
+        return String.format("%d%s", num, tail);
     }
 
 }

@@ -32,6 +32,8 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test case for {@link MktmpResolver}.
@@ -65,7 +67,20 @@ final class MktmpResolverTest {
         MatcherAssert.assertThat(
             "the directory name is proper",
             tmp.toString(),
-            Matchers.endsWith("target/mktmp/createsProperDirName(Path)/0-0")
+            Matchers.containsString(
+                "target/mktmp/MktmpResolverTest/createsProperDirName/1st-"
+            )
+        );
+    }
+
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    @ParameterizedTest
+    @ValueSource(strings = {"first", "second"})
+    void makesManyDirs(final String arg, @Mktmp final Path tmp) {
+        MatcherAssert.assertThat(
+            "the directory is properly named",
+            tmp.toString(),
+            Matchers.containsString("MktmpResolverTest/makesManyDirs/2nd-")
         );
     }
 
