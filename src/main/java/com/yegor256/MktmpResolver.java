@@ -54,7 +54,9 @@ public final class MktmpResolver implements ParameterResolver {
         Path path = target.resolve("mktmp").resolve(ext.getDisplayName());
         int idx = 0;
         while (true) {
-            final Path sub = path.resolve(Integer.toString(idx));
+            final Path sub = path.resolve(
+                String.format("%d-%d", context.getIndex(), idx)
+            );
             if (sub.toFile().mkdirs()) {
                 path = sub;
                 break;

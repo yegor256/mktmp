@@ -60,6 +60,16 @@ final class MktmpResolverTest {
     }
 
     @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void createsProperDirName(@Mktmp final Path tmp) {
+        MatcherAssert.assertThat(
+            "the directory name is proper",
+            tmp.toString(),
+            Matchers.endsWith("target/mktmp/createsProperDirName(Path)/0-0")
+        );
+    }
+
+    @Test
     void createsTwoDirectories(@Mktmp final Path first, @Mktmp final Path second) {
         MatcherAssert.assertThat(
             "the directory is there",
