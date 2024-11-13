@@ -31,7 +31,7 @@ SOFTWARE.
   </parent>
   <groupId>com.yegor256</groupId>
   <artifactId>mktmp</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
   <name>Mktmp</name>
   <description>Makes a temporary directory for JUnit5 tests, inside target/ directory</description>
