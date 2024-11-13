@@ -27,6 +27,7 @@ import java.io.File;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -42,6 +43,15 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 @ExtendWith(MktmpResolver.class)
 final class MktmpResolverTest {
+
+    @BeforeAll
+    static void onceTemp(@Mktmp final Path tmp) {
+        MatcherAssert.assertThat(
+            "the directory is there, once for all tests",
+            tmp.toFile().exists(),
+            Matchers.is(true)
+        );
+    }
 
     @Test
     void createsTempDir(@Mktmp final Path tmp) {
