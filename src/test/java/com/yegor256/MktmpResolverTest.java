@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test case for {@link MktmpResolver}.
@@ -64,6 +65,20 @@ final class MktmpResolverTest {
             "the directory is there",
             first.toString().equals(second.toString()),
             Matchers.is(false)
+        );
+    }
+
+    @Test
+    void doesntConflictWithJunit(@TempDir final Path first, @Mktmp final Path second) {
+        MatcherAssert.assertThat(
+            "the first directory is there (from JUnit)",
+            first.toFile().exists(),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            "the second directory is there (from Mktmp)",
+            second.toFile().exists(),
+            Matchers.is(true)
         );
     }
 

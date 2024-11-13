@@ -42,8 +42,8 @@ public final class MktmpResolver implements ParameterResolver {
     @Override
     public boolean supportsParameter(final ParameterContext context,
         final ExtensionContext ext) {
-        return context.getParameter().getType().equals(Path.class)
-            || context.getParameter().getType().equals(File.class)
+        return (context.getParameter().getType().equals(Path.class)
+            || context.getParameter().getType().equals(File.class))
             && context.isAnnotated(Mktmp.class);
     }
 
