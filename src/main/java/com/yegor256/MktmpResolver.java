@@ -71,7 +71,7 @@ public final class MktmpResolver implements ParameterResolver {
                 String.format(
                     "%s-%s",
                     MktmpResolver.ordinal(context.getIndex() + 1),
-                    new SimpleDateFormat("mm'm'ss's'SS", Locale.ROOT).format(new Date())
+                    new SimpleDateFormat("mm'm'ss's'SSS", Locale.ROOT).format(new Date())
                 )
             );
             if (sub.toFile().mkdirs()) {
