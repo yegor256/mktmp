@@ -1,13 +1,13 @@
 # Temp Directory in JUnit5 Tests, in the `target/`
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
-[![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/mktmp)](http://www.rultor.com/p/yegor256/mktmp)
+[![DevOps By Rultor.com](https://www.rultor.com/b/yegor256/mktmp)](https://www.rultor.com/p/yegor256/mktmp)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
 [![mvn](https://github.com/yegor256/mktmp/actions/workflows/mvn.yml/badge.svg)](https://github.com/yegor256/mktmp/actions/workflows/mvn.yml)
-[![PDD status](http://www.0pdd.com/svg?name=yegor256/mktmp)](http://www.0pdd.com/p?name=yegor256/mktmp)
+[![PDD status](https://www.0pdd.com/svg?name=yegor256/mktmp)](https://www.0pdd.com/p?name=yegor256/mktmp)
 [![Maven Central](https://img.shields.io/maven-central/v/com.yegor256/mktmp.svg)](https://maven-badges.herokuapp.com/maven-central/com.yegor256/mktmp)
-[![Javadoc](http://www.javadoc.io/badge/com.yegor256/mktmp.svg)](http://www.javadoc.io/doc/com.yegor256/mktmp)
+[![Javadoc](https://www.javadoc.io/badge/com.yegor256/mktmp.svg)](https://www.javadoc.io/doc/com.yegor256/mktmp)
 [![codecov](https://codecov.io/gh/yegor256/mktmp/branch/master/graph/badge.svg)](https://codecov.io/gh/yegor256/mktmp)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/mktmp)](https://hitsofcode.com/view/github/yegor256/mktmp)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/mktmp/blob/master/LICENSE.txt)
