@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.68.0</version>
+    <version>0.71.0</version>
   </parent>
   <groupId>com.yegor256</groupId>
   <artifactId>mktmp</artifactId>
@@ -63,7 +63,7 @@
     </site>
   </distributionManagement>
   <properties>
-    <junit.version>5.10.5</junit.version>
+    <junit.version>6.0.1</junit.version>
   </properties>
   <dependencies>
     <dependency>
@@ -85,6 +85,43 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <version>0.15.1</version>
+        <dependencies>
+          <dependency>
+              <groupId>org.revapi</groupId>
+              <artifactId>revapi-java</artifactId>
+              <version>0.28.4</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <analysisConfiguration>
+            <revapi.differences>
+              <ignore>true</ignore>
+              <differences>
+                <item>
+                  <regex>true</regex>
+                  <code>.*</code>
+                  <newArchive>org\.junit\..*</newArchive>
+                </item>
+              </differences>
+            </revapi.differences>
+          </analysisConfiguration>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <profiles>
     <profile>
       <id>qulice</id>
