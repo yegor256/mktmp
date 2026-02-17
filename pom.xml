@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.71.0</version>
+    <version>0.72.0</version>
   </parent>
   <groupId>com.yegor256</groupId>
   <artifactId>mktmp</artifactId>
@@ -130,7 +130,7 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.24.0</version>
+            <version>0.25.1</version>
           </plugin>
         </plugins>
       </build>

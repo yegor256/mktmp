@@ -96,13 +96,8 @@ final class MktmpResolverTest {
     @Test
     void doesntConflictWithJunit(@TempDir final Path first, @Mktmp final Path second) {
         MatcherAssert.assertThat(
-            "the first directory is there (from JUnit)",
-            first.toFile().exists(),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            "the second directory is there (from Mktmp)",
-            second.toFile().exists(),
+            "both directories must exist",
+            first.toFile().exists() && second.toFile().exists(),
             Matchers.is(true)
         );
     }

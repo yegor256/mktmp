@@ -7,8 +7,8 @@ package com.yegor256;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -52,7 +52,8 @@ public final class MktmpResolver implements ParameterResolver {
                 String.format(
                     "%s-%s",
                     MktmpResolver.ordinal(context.getIndex() + 1),
-                    new SimpleDateFormat("mm'm'ss's'SSS", Locale.ROOT).format(new Date())
+                    DateTimeFormatter.ofPattern("mm'm'ss's'SSS", Locale.ROOT)
+                        .format(LocalDateTime.now())
                 )
             );
             if (sub.toFile().mkdirs()) {
