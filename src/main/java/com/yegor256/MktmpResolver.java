@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * This class is instantiated and then called by JUnit when
  * an argument of a test method is marked with the {@link Mktmp}
  * annotation.
- *
  * @since 0.1.0
  */
 public final class MktmpResolver implements ParameterResolver {
@@ -35,25 +35,18 @@ public final class MktmpResolver implements ParameterResolver {
     public Object resolveParameter(final ParameterContext context,
         final ExtensionContext ext) {
         final Path target = Paths.get("target").toAbsolutePath();
-        Path path = target
-            .resolve("mktmp")
-            .resolve(
-                ext.getTestClass()
-                    .map(Class::getSimpleName)
-                    .orElse(ext.getDisplayName())
-            )
-            .resolve(
-                context.getParameter()
-                    .getDeclaringExecutable()
-                    .getName()
-            );
+        Path path = target.resolve("mktmp").resolve(
+            ext.getTestClass().map(Class::getSimpleName).orElse(ext.getDisplayName())
+        ).resolve(
+            context.getParameter().getDeclaringExecutable().getName()
+        );
         while (true) {
             final Path sub = path.resolve(
                 String.format(
                     "%s-%s",
                     MktmpResolver.ordinal(context.getIndex() + 1),
                     DateTimeFormatter.ofPattern("mm'm'ss's'SSS", Locale.ROOT)
-                        .format(LocalDateTime.now())
+                        .format(LocalDateTime.now(ZoneId.systemDefault()))
                 )
             );
             if (sub.toFile().mkdirs()) {
@@ -88,5 +81,4 @@ public final class MktmpResolver implements ParameterResolver {
         }
         return String.format("%d%s", num, tail);
     }
-
 }
