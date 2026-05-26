@@ -24,6 +24,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 @ExtendWith(MktmpResolver.class)
 final class MktmpResolverTest {
 
+    /**
+     * Temporary path field.
+     */
+    @Mktmp
+    private Path field;
+
+    /**
+     * Temporary file field.
+     */
+    @Mktmp
+    private File folder;
+
     @BeforeAll
     static void onceTemp(@Mktmp final Path tmp) {
         MatcherAssert.assertThat(
@@ -56,6 +68,24 @@ final class MktmpResolverTest {
         MatcherAssert.assertThat(
             "the directory is there too",
             tmp.exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void worksWithPathField() {
+        MatcherAssert.assertThat(
+            "the path field is injected",
+            this.field.toFile().exists(),
+            Matchers.is(true)
+        );
+    }
+
+    @Test
+    void worksWithFileField() {
+        MatcherAssert.assertThat(
+            "the file field is injected",
+            this.folder.exists(),
             Matchers.is(true)
         );
     }
