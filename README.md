@@ -50,6 +50,9 @@ class FooTest {
 }
 ```
 
+You can also annotate a `Path` or `File` field with `@Mktmp`;
+the extension will inject it before each test instance runs.
+
 ## How to Contribute
 
 Fork repository, make changes, send us a

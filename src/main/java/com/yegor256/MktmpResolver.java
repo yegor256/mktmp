@@ -5,6 +5,9 @@
 package com.yegor256;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -14,6 +17,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 /**
  * This class is instantiated and then called by JUnit when
@@ -21,30 +25,118 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * annotation.
  * @since 0.1.0
  */
-public final class MktmpResolver implements ParameterResolver {
+public final class MktmpResolver implements ParameterResolver,
+    TestInstancePostProcessor {
+
+    @Override
+    public void postProcessTestInstance(final Object test,
+        final ExtensionContext ext) {
+        Class<?> type = test.getClass();
+        while (!type.equals(Object.class)) {
+            for (final Field field : type.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Mktmp.class)) {
+                    MktmpResolver.inject(test, field, ext);
+                }
+            }
+            type = type.getSuperclass();
+        }
+    }
 
     @Override
     public boolean supportsParameter(final ParameterContext context,
         final ExtensionContext ext) {
-        return (context.getParameter().getType().equals(Path.class)
-            || context.getParameter().getType().equals(File.class))
+        return MktmpResolver.supported(context.getParameter().getType())
             && context.isAnnotated(Mktmp.class);
     }
 
     @Override
     public Object resolveParameter(final ParameterContext context,
         final ExtensionContext ext) {
+        return MktmpResolver.make(
+            context.getParameter().getType(),
+            MktmpResolver.path(
+                ext,
+                context.getParameter().getDeclaringExecutable().getName(),
+                context.getIndex() + 1
+            )
+        );
+    }
+
+    /**
+     * Inject a field.
+     * @param test The test instance
+     * @param field The field
+     * @param ext The extension context
+     */
+    private static void inject(final Object test, final Field field,
+        final ExtensionContext ext) {
+        if (!MktmpResolver.supported(field.getType())) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "@Mktmp field \"%s\" must be Path or File",
+                    field.getName()
+                )
+            );
+        }
+        try {
+            final VarHandle handle = MethodHandles.privateLookupIn(
+                field.getDeclaringClass(),
+                MethodHandles.lookup()
+            ).unreflectVarHandle(field);
+            handle.set(
+                test,
+                MktmpResolver.make(
+                    field.getType(),
+                    MktmpResolver.path(ext, field.getName(), 1)
+                )
+            );
+        } catch (final IllegalAccessException err) {
+            throw new IllegalStateException(
+                String.format(
+                    "Failed to assign @Mktmp field \"%s\"",
+                    field.getName()
+                ),
+                err
+            );
+        }
+    }
+
+    /**
+     * Make a temporary object.
+     * @param type The requested type
+     * @param path The temporary path
+     * @return The temporary object
+     */
+    private static Object make(final Class<?> type, final Path path) {
+        final Object ret;
+        if (type.equals(File.class)) {
+            ret = path.toFile();
+        } else {
+            ret = path;
+        }
+        return ret;
+    }
+
+    /**
+     * Make a temporary path.
+     * @param ext The extension context
+     * @param name The executable or field name
+     * @param index The argument or field index
+     * @return The temporary path
+     */
+    private static Path path(final ExtensionContext ext, final String name,
+        final int index) {
         final Path target = Paths.get("target").toAbsolutePath();
         Path path = target.resolve("mktmp").resolve(
             ext.getTestClass().map(Class::getSimpleName).orElse(ext.getDisplayName())
         ).resolve(
-            context.getParameter().getDeclaringExecutable().getName()
+            name
         );
         while (true) {
             final Path sub = path.resolve(
                 String.format(
                     "%s-%s",
-                    MktmpResolver.ordinal(context.getIndex() + 1),
+                    MktmpResolver.ordinal(index),
                     DateTimeFormatter.ofPattern("mm'm'ss's'SSS", Locale.ROOT)
                         .format(LocalDateTime.now(ZoneId.systemDefault()))
                 )
@@ -54,13 +146,16 @@ public final class MktmpResolver implements ParameterResolver {
                 break;
             }
         }
-        final Object ret;
-        if (context.getParameter().getType().equals(File.class)) {
-            ret = path.toFile();
-        } else {
-            ret = path;
-        }
-        return ret;
+        return path;
+    }
+
+    /**
+     * Check if the type is supported.
+     * @param type The type
+     * @return True if supported
+     */
+    private static boolean supported(final Class<?> type) {
+        return type.equals(Path.class) || type.equals(File.class);
     }
 
     /**

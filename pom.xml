@@ -108,6 +108,16 @@
                   <code>.*</code>
                   <newArchive>org\.junit\..*</newArchive>
                 </item>
+                <item>
+                  <code>java.annotation.attributeValueChanged</code>
+                  <old>@interface com.yegor256.Mktmp</old>
+                  <new>@interface com.yegor256.Mktmp</new>
+                  <annotationType>java.lang.annotation.Target</annotationType>
+                  <attribute>value</attribute>
+                  <justification>
+                    The annotation intentionally supports fields in addition to parameters.
+                  </justification>
+                </item>
               </differences>
             </revapi.differences>
           </analysisConfiguration>
