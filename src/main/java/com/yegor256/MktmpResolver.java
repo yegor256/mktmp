@@ -63,6 +63,32 @@ public final class MktmpResolver implements ParameterResolver,
     }
 
     /**
+     * Turn index into an ordinal number.
+     *
+     * <p>The teens 11, 12 and 13 (and every {@code ...11}, {@code ...12},
+     * {@code ...13}) are an exception in English and always take "th", not
+     * "st"/"nd"/"rd".</p>
+     *
+     * @param num The number
+     * @return Ordinal one (1st, 2nd, 3rd, 8th, 11th, etc.)
+     */
+    static String ordinal(final int num) {
+        final String tail;
+        if (num % 100 / 10 == 1) {
+            tail = "th";
+        } else if (num % 10 == 1) {
+            tail = "st";
+        } else if (num % 10 == 2) {
+            tail = "nd";
+        } else if (num % 10 == 3) {
+            tail = "rd";
+        } else {
+            tail = "th";
+        }
+        return String.format("%d%s", num, tail);
+    }
+
+    /**
      * Inject a field.
      * @param test The test instance
      * @param field The field
@@ -156,24 +182,5 @@ public final class MktmpResolver implements ParameterResolver,
      */
     private static boolean supported(final Class<?> type) {
         return type.equals(Path.class) || type.equals(File.class);
-    }
-
-    /**
-     * Turn index into an ordinal number.
-     * @param num The number
-     * @return Ordinal one (1st, 2nd, 3rd, 8th, etc.)
-     */
-    private static String ordinal(final int num) {
-        final String tail;
-        if (num % 10 == 1) {
-            tail = "st";
-        } else if (num % 10 == 2) {
-            tail = "nd";
-        } else if (num % 10 == 3) {
-            tail = "rd";
-        } else {
-            tail = "th";
-        }
-        return String.format("%d%s", num, tail);
     }
 }

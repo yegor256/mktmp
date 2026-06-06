@@ -15,6 +15,7 @@ import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
@@ -22,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)
+@SuppressWarnings("PMD.TooManyMethods")
 final class MktmpResolverTest {
 
     /**
@@ -51,6 +53,21 @@ final class MktmpResolverTest {
                 Matchers.containsString("onceTemp"),
                 Matchers.containsString("1st-")
             )
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "1, 1st", "2, 2nd", "3, 3rd", "4, 4th",
+        "11, 11th", "12, 12th", "13, 13th",
+        "21, 21st", "22, 22nd", "23, 23rd",
+        "111, 111th", "112, 112th", "113, 113th"
+    })
+    void formatsOrdinalSuffix(final int num, final String expected) {
+        MatcherAssert.assertThat(
+            "ordinal suffix must follow English rules, teens always take 'th'",
+            MktmpResolver.ordinal(num),
+            Matchers.equalTo(expected)
         );
     }
 
