@@ -23,7 +23,6 @@ import org.junit.jupiter.params.provider.ValueSource;
  * @since 0.1.0
  */
 @ExtendWith(MktmpResolver.class)
-@SuppressWarnings("PMD.TooManyMethods")
 final class MktmpResolverTest {
 
     /**
