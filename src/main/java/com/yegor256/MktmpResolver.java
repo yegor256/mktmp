@@ -28,6 +28,13 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 public final class MktmpResolver implements ParameterResolver,
     TestInstancePostProcessor {
 
+    /**
+     * Ctor.
+     */
+    public MktmpResolver() {
+        // nothing to initialize
+    }
+
     @Override
     public void postProcessTestInstance(final Object test,
         final ExtensionContext ext) {

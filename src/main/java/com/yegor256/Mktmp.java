@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  *
  * <p>Use it like this:</p>
  *
- * <code><pre> import com.yegor256.Mktmp;
+ * <pre><code> import com.yegor256.Mktmp;
  * import com.yegor256.MktmpResolver;
  * import org.junit.jupiter.api.Test;
  * import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *     // be kept, in order to help you review the
  *     // leftovers after failed (or passed) tests.
  *   }
- * }</pre></code>
+ * }</code></pre>
  *
  * @since 0.1.0
  */
