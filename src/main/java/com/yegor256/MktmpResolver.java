@@ -95,12 +95,6 @@ public final class MktmpResolver implements ParameterResolver,
         return String.format("%d%s", num, tail);
     }
 
-    /**
-     * Inject a field.
-     * @param test The test instance
-     * @param field The field
-     * @param ext The extension context
-     */
     private static void inject(final Object test, final Field field,
         final ExtensionContext ext) {
         if (!MktmpResolver.supported(field.getType())) {
@@ -134,12 +128,6 @@ public final class MktmpResolver implements ParameterResolver,
         }
     }
 
-    /**
-     * Make a temporary object.
-     * @param type The requested type
-     * @param path The temporary path
-     * @return The temporary object
-     */
     private static Object make(final Class<?> type, final Path path) {
         final Object ret;
         if (type.equals(File.class)) {
@@ -150,13 +138,6 @@ public final class MktmpResolver implements ParameterResolver,
         return ret;
     }
 
-    /**
-     * Make a temporary path.
-     * @param ext The extension context
-     * @param name The executable or field name
-     * @param index The argument or field index
-     * @return The temporary path
-     */
     private static Path path(final ExtensionContext ext, final String name,
         final int index) {
         final Path target = Paths.get("target").toAbsolutePath();
@@ -182,11 +163,6 @@ public final class MktmpResolver implements ParameterResolver,
         return path;
     }
 
-    /**
-     * Check if the type is supported.
-     * @param type The type
-     * @return True if supported
-     */
     private static boolean supported(final Class<?> type) {
         return type.equals(Path.class) || type.equals(File.class);
     }
