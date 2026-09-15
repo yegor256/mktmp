@@ -5,6 +5,7 @@
 
 /**
  * Use it in your JUnit5 tests.
+ *
  * @since 0.0.1
  */
 package com.yegor256;
