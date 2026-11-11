@@ -27,6 +27,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 final class MktmpResolverTest {
 
     /**
+     * Temporary static path field.
+     */
+    @Mktmp
+    private static Path shared;
+
+    /**
      * Temporary path field.
      */
     @Mktmp
@@ -155,6 +161,15 @@ final class MktmpResolverTest {
             "the path is absolute",
             tmp.toString(),
             Matchers.startsWith("/")
+        );
+    }
+
+    @Test
+    void worksWithStaticField() {
+        MatcherAssert.assertThat(
+            "the static field is injected",
+            MktmpResolverTest.shared.toFile().exists(),
+            Matchers.is(true)
         );
     }
 }
