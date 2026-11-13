@@ -5,18 +5,27 @@
 package com.yegor256;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Optional;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link MktmpResolver}.
@@ -69,6 +78,48 @@ final class MktmpResolverTest {
             MktmpResolver.ordinal(num),
             Matchers.equalTo(expected)
         );
+    }
+
+    @Test
+    void rejectsBlockedParent(@TempDir final Path tmp) throws Exception {
+        final Path parent = Paths.get(
+            "target", "mktmp", tmp.getFileName().toString(), "rejectsBlockedParent"
+        ).toAbsolutePath();
+        Files.createDirectories(parent.getParent());
+        Files.write(parent, new byte[0]);
+        try {
+            final ExtensionContext ext = Mockito.mock(ExtensionContext.class);
+            Mockito.when(ext.getTestClass()).thenReturn(Optional.empty());
+            Mockito.when(ext.getDisplayName()).thenReturn(tmp.getFileName().toString());
+            final ParameterContext param = Mockito.mock(ParameterContext.class);
+            Mockito.when(param.getParameter()).thenReturn(
+                MktmpResolverTest.class.getDeclaredMethod(
+                    "rejectsBlockedParent", Path.class
+                ).getParameters()[0]
+            );
+            Assertions.assertTimeoutPreemptively(
+                Duration.ofSeconds(2L),
+                () -> {
+                    final IllegalStateException err = Assertions.assertThrows(
+                        IllegalStateException.class,
+                        () -> new MktmpResolver().resolveParameter(param, ext),
+                        "a blocked parent must fail instead of retrying forever"
+                    );
+                    MatcherAssert.assertThat(
+                        "the failure identifies the parent directory",
+                        err.getMessage(),
+                        Matchers.containsString(parent.toString())
+                    );
+                    MatcherAssert.assertThat(
+                        "the filesystem error is preserved",
+                        err.getCause(),
+                        Matchers.instanceOf(IOException.class)
+                    );
+                }
+            );
+        } finally {
+            Files.delete(parent);
+        }
     }
 
     @Test
