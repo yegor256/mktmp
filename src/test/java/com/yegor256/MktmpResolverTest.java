@@ -161,17 +161,16 @@ final class MktmpResolverTest {
 
     @Test
     void rejectsFinalField() {
-        final IllegalArgumentException error = Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> new MktmpResolver().postProcessTestInstance(
-                new Sample(),
-                null
-            ),
-            "final field must be rejected with a clear error"
+        final MktmpResolverTest.Sample sample = new MktmpResolverTest.Sample(
+            Path.of("final")
         );
         MatcherAssert.assertThat(
-            "the message names the final field",
-            error.getMessage(),
+            String.format("the error explains why %s cannot be injected", sample.temp),
+            Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new MktmpResolver().postProcessTestInstance(sample, null),
+                "final field must be rejected with a clear error"
+            ).getMessage(),
             Matchers.containsString("must not be final")
         );
     }
@@ -182,7 +181,20 @@ final class MktmpResolverTest {
      * @since 0.1.0
      */
     private static final class Sample {
+
+        /**
+         * Final field that cannot be injected.
+         */
         @Mktmp
-        private final Path temp = null;
+        private final Path temp;
+
+        /**
+         * New fixture.
+         *
+         * @param path Initial field value
+         */
+        Sample(final Path path) {
+            this.temp = path;
+        }
     }
 }
