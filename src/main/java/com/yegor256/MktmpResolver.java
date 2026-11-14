@@ -8,6 +8,7 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -102,6 +103,14 @@ public final class MktmpResolver implements ParameterResolver,
             throw new IllegalArgumentException(
                 String.format(
                     "@Mktmp field \"%s\" must be Path or File",
+                    field.getName()
+                )
+            );
+        }
+        if (Modifier.isFinal(field.getModifiers())) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "@Mktmp field \"%s\" must not be final",
                     field.getName()
                 )
             );

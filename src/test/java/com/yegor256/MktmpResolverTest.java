@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.file.Path;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -156,5 +157,32 @@ final class MktmpResolverTest {
             tmp.toString(),
             Matchers.startsWith("/")
         );
+    }
+
+    @Test
+    void rejectsFinalField() {
+        final IllegalArgumentException error = Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new MktmpResolver().postProcessTestInstance(
+                new Sample(),
+                null
+            ),
+            "final field must be rejected with a clear error"
+        );
+        MatcherAssert.assertThat(
+            "the message names the final field",
+            error.getMessage(),
+            Matchers.containsString("must not be final")
+        );
+    }
+
+    /**
+     * Fixture with a final annotated field.
+     *
+     * @since 0.1.0
+     */
+    private static final class Sample {
+        @Mktmp
+        private final Path temp = null;
     }
 }
