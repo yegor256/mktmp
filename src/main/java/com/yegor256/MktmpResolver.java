@@ -5,9 +5,12 @@
 package com.yegor256;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -147,19 +150,32 @@ public final class MktmpResolver implements ParameterResolver,
         ).resolve(
             name
         );
-        while (true) {
-            final Path sub = path.resolve(
-                String.format(
-                    "%s-%s",
-                    MktmpResolver.ordinal(index),
-                    DateTimeFormatter.ofPattern("mm'm'ss's'SSS", Locale.ROOT)
-                        .format(LocalDateTime.now(ZoneId.systemDefault()))
-                )
-            );
-            if (sub.toFile().mkdirs()) {
-                path = sub;
-                break;
+        try {
+            Files.createDirectories(path);
+            while (true) {
+                final Path sub = path.resolve(
+                    String.format(
+                        "%s-%s",
+                        MktmpResolver.ordinal(index),
+                        DateTimeFormatter.ofPattern("mm'm'ss's'SSS", Locale.ROOT)
+                            .format(LocalDateTime.now(ZoneId.systemDefault()))
+                    )
+                );
+                try {
+                    Files.createDirectory(sub);
+                    path = sub;
+                    break;
+                } catch (final FileAlreadyExistsException err) {
+                    if (!Files.isDirectory(sub)) {
+                        throw err;
+                    }
+                }
             }
+        } catch (final IOException err) {
+            throw new IllegalStateException(
+                String.format("Failed to create @Mktmp directory under \"%s\"", path),
+                err
+            );
         }
         return path;
     }
