@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Locale;
 import java.util.Optional;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -34,6 +35,12 @@ import org.mockito.Mockito;
  */
 @ExtendWith(MktmpResolver.class)
 final class MktmpResolverTest {
+
+    /**
+     * Temporary static path field.
+     */
+    @Mktmp
+    private static Path shared;
 
     /**
      * Temporary path field.
@@ -123,6 +130,21 @@ final class MktmpResolverTest {
     }
 
     @Test
+    void formatsOrdinalWithLatinDigitsInAnyLocale() {
+        final Locale before = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("th-TH-u-nu-thai"));
+        try {
+            MatcherAssert.assertThat(
+                "ordinal must use Latin digits whatever the default locale is",
+                MktmpResolver.ordinal(12),
+                Matchers.equalTo("12th")
+            );
+        } finally {
+            Locale.setDefault(before);
+        }
+    }
+
+    @Test
     void createsTempDir(@Mktmp final Path tmp) {
         MatcherAssert.assertThat(
             "the directory is there",
@@ -206,6 +228,15 @@ final class MktmpResolverTest {
             "the path is absolute",
             tmp.toString(),
             Matchers.startsWith("/")
+        );
+    }
+
+    @Test
+    void worksWithStaticField() {
+        MatcherAssert.assertThat(
+            "the static field is injected",
+            MktmpResolverTest.shared.toFile().exists(),
+            Matchers.is(true)
         );
     }
 }
