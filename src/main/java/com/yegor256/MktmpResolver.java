@@ -8,6 +8,7 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -111,13 +112,15 @@ public final class MktmpResolver implements ParameterResolver,
                 field.getDeclaringClass(),
                 MethodHandles.lookup()
             ).unreflectVarHandle(field);
-            handle.set(
-                test,
-                MktmpResolver.make(
-                    field.getType(),
-                    MktmpResolver.path(ext, field.getName(), 1)
-                )
+            final Object value = MktmpResolver.make(
+                field.getType(),
+                MktmpResolver.path(ext, field.getName(), 1)
             );
+            if (Modifier.isStatic(field.getModifiers())) {
+                handle.set(value);
+            } else {
+                handle.set(test, value);
+            }
         } catch (final IllegalAccessException err) {
             throw new IllegalStateException(
                 String.format(
