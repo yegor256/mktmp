@@ -6,6 +6,7 @@ package com.yegor256;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Locale;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,6 +70,21 @@ final class MktmpResolverTest {
             MktmpResolver.ordinal(num),
             Matchers.equalTo(expected)
         );
+    }
+
+    @Test
+    void formatsOrdinalWithLatinDigitsInAnyLocale() {
+        final Locale before = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("th-TH-u-nu-thai"));
+        try {
+            MatcherAssert.assertThat(
+                "ordinal must use Latin digits whatever the default locale is",
+                MktmpResolver.ordinal(12),
+                Matchers.equalTo("12th")
+            );
+        } finally {
+            Locale.setDefault(before);
+        }
     }
 
     @Test

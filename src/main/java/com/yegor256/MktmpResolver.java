@@ -93,7 +93,7 @@ public final class MktmpResolver implements ParameterResolver,
         } else {
             tail = "th";
         }
-        return String.format("%d%s", num, tail);
+        return String.format(Locale.ROOT, "%d%s", num, tail);
     }
 
     private static void inject(final Object test, final Field field,
