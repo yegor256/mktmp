@@ -120,13 +120,15 @@ public final class MktmpResolver implements ParameterResolver,
                 field.getDeclaringClass(),
                 MethodHandles.lookup()
             ).unreflectVarHandle(field);
-            handle.set(
-                test,
-                MktmpResolver.make(
-                    field.getType(),
-                    MktmpResolver.path(ext, field.getName(), 1)
-                )
+            final Object value = MktmpResolver.make(
+                field.getType(),
+                MktmpResolver.path(ext, field.getName(), 1)
             );
+            if (Modifier.isStatic(field.getModifiers())) {
+                handle.set(value);
+            } else {
+                handle.set(test, value);
+            }
         } catch (final IllegalAccessException err) {
             throw new IllegalStateException(
                 String.format(
