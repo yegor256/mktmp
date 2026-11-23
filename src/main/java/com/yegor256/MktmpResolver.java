@@ -110,6 +110,14 @@ public final class MktmpResolver implements ParameterResolver,
                 )
             );
         }
+        if (Modifier.isFinal(field.getModifiers())) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "@Mktmp field \"%s\" must not be final",
+                    field.getName()
+                )
+            );
+        }
         try {
             final VarHandle handle = MethodHandles.privateLookupIn(
                 field.getDeclaringClass(),
